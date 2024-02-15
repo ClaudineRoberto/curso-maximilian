@@ -1,38 +1,17 @@
-import reactImg from "./assets/react-core-concepts.png";
-import componentsImg from "./assets/components.png";
-import { CORE_CONCEPTS } from "./data";
-
-const reactDescriptions = ["Fundamental", "Powerful", "Simple"];
-function genRandomIndex() {
-  return Math.floor(Math.random() * reactDescriptions.length);
-}
-
-function Header() {
-
-  const description = reactDescriptions[genRandomIndex()];
-  return (
-    <header>
-      <img src={reactImg} alt="Stylized atom" />
-      <h1>React Essentials</h1>
-      <p>
-        {description} React concepts you will need for almost any app you are
-        going to build!
-      </p>
-    </header>
-  );
-}
-// Criação do componente CoreConcept
-const CoreConcept = (props) => {
-  return (
-    <li>
-      <img src={props.image} alt={props.title} />
-      <h3>{props.title}</h3>
-      <p>{props.description}</p>
-    </li>
-  );
-}
+import { CORE_CONCEPTS, EXAMPLES } from "./data.js";
+import { CoreConcept } from "./components/CoreConcept";
+import { Header } from "./components/Header/Header.jsx";
+import { TabButton } from "./components/TabButton.jsx";
+import { useState } from "react";
 
 function App() {
+
+  const [selectedTopic, setSelectedTopic] = useState();
+
+  const handleSelect = (selectedButton) => {
+    setSelectedTopic(selectedButton);
+  }
+
   return (
     <div>
       <Header />
@@ -40,27 +19,31 @@ function App() {
         <section id="core-concepts">
           <h2>Core Concepts</h2>
           <ul>
-            <CoreConcept //Usando componente CoreConcept
-              title={CORE_CONCEPTS[0].title}
-              description={CORE_CONCEPTS[0].description}
-              image={CORE_CONCEPTS[0].image}
-            />
-            <CoreConcept  //Usando componente CoreConcept
-              title={CORE_CONCEPTS[1].title}
-              description={CORE_CONCEPTS[1].description}
-              image={CORE_CONCEPTS[1].image}
-            />
-            <CoreConcept  //Usando componente CoreConcept
-              title={CORE_CONCEPTS[2].title}
-              description={CORE_CONCEPTS[2].description}
-              image={CORE_CONCEPTS[2].image}
-            />
-            <CoreConcept  //Usando componente CoreConcept
-              title={CORE_CONCEPTS[3].title}
-              description={CORE_CONCEPTS[3].description}
-              image={CORE_CONCEPTS[3].image}
-            />
+            <CoreConcept {...CORE_CONCEPTS[0]} />
+            <CoreConcept {...CORE_CONCEPTS[1]} />
+            <CoreConcept {...CORE_CONCEPTS[2]} />
+            <CoreConcept {...CORE_CONCEPTS[3]} />
           </ul>
+        </section>
+        <section id="examples">
+          <h2>Examples</h2>
+          <menu>
+            <TabButton onSelect={() => handleSelect('components')}>Components</TabButton>
+            <TabButton onSelect={() => handleSelect('jsx')}>Jsx</TabButton>
+            <TabButton onSelect={() => handleSelect('props')}>Props</TabButton>
+            <TabButton onSelect={() => handleSelect('state')}>State</TabButton>
+          </menu>
+          {!selectedTopic ? <p>Click on a tab to view the example</p> :
+            <div id="tab-content">
+              <h3> {EXAMPLES[selectedTopic].title} </h3>
+              <p> {EXAMPLES[selectedTopic].description} </p>
+              <pre>
+                <code>
+                  {EXAMPLES[selectedTopic].code}
+                </code>
+              </pre>
+            </div>
+          }
         </section>
       </main>
     </div>
